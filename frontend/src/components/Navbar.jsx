@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
 import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import {
@@ -9,49 +9,36 @@ import {
 } from '@solana/wallet-adapter-wallets';
 import {
     WalletModalProvider,
+    WalletMultiButton,
     WalletDisconnectButton,
-    WalletMultiButton
 } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
-import logo from "../assets/1.jpg"
-
-// Use import instead of require for styles
+import logo from "../assets/1.jpg";
 import '@solana/wallet-adapter-react-ui/styles.css';
 
 const Navbar = () => {
     const network = WalletAdapterNetwork.Devnet;
-
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
-    // Add multiple wallets to the list
-    const wallets = useMemo(
-        () => [
-            new PhantomWalletAdapter(),
-            new SolflareWalletAdapter({ network }),
-            new TorusWalletAdapter(),
-            new LedgerWalletAdapter(),
-        ],
-        [network]
-    );
+    const wallets = useMemo(() => [
+        new PhantomWalletAdapter(),
+        new SolflareWalletAdapter({ network }),
+        new TorusWalletAdapter(),
+        new LedgerWalletAdapter(),
+    ], [network]);
 
     return (
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets} autoConnect>
-                <WalletModalProvider>
-                    <div className='flex justify-between bg-stone-600'>
-                        <div className='p-2 flex items-center'>
-                            <img src={logo} alt="" width={60} />
-                            <span className='pl-3 font-extrabold text-4xl'>CrowdFunding</span>
-                        </div>
-                        <div className='flex justify-between gap-4 items-center'>
-                            <WalletMultiButton />
-                            <WalletDisconnectButton />
-                        </div>
-                    </div>
-                </WalletModalProvider>
-            </WalletProvider>
-        </ConnectionProvider>
+        <div className='flex justify-between bg-stone-600 p-4 items-center'>
+            <div className='flex items-center'>
+                <img src={logo} alt="Logo" width={60} />
+                <h1 className='text-white font-bold text-2xl ml-3'>CrowdFunding</h1>
+            </div>
+            <div className='flex space-x-4'>
+                <WalletMultiButton />
+                <WalletDisconnectButton />
+            </div>
+        </div>
     );
-}
+};
 
 export default Navbar;
